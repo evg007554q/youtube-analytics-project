@@ -22,7 +22,7 @@ class Channel:
         # - количество подписчиков statistics/subscriberCount
         # - количество видео statistics/videoCount
         # - общее количество просмотров statistics/viewCount
-        channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         self.title = channel['items'][0]['snippet']['title'] # MoscowPython
         self.description = channel['items'][0]['snippet']['description']
         self.url = channel['items'][0]['snippet']['thumbnails']['default']['url']
@@ -32,7 +32,7 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        channel = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
 
         # print(channel['items'][0]['snippet']['title'])
         print(json.dumps(channel, indent=2, ensure_ascii=False))
@@ -40,3 +40,18 @@ class Channel:
     @classmethod
     def get_service(cls):
         return build('youtube', 'v3', developerKey=api_key)
+
+    def to_json(self,file_name):
+        for_file_channel = {}
+        for_file_channel['channel_id'] = self.__channel_id
+        for_file_channel['title'] = self.title
+        for_file_channel['description'] = self.description
+        for_file_channel['url'] = self.url
+        for_file_channel['video_count'] = self.video_count
+        for_file_channel['viewCount'] = self.viewCount
+        for_file_channel['subscriberCount'] = self.subscriberCount
+
+        # print(for_file_channel)
+        with open(file_name,'w') as file_json:
+            json.dump(for_file_channel,file_json)
+
