@@ -9,6 +9,9 @@ api_key: str = os.getenv('YT_API_KEY')
 # создать специальный объект для работы с API
 youtube = build('youtube', 'v3', developerKey=api_key)
 
+def printj(dict_to_print: dict) -> None:
+    """Выводит словарь в json-подобном удобном формате с отступами"""
+    print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
 
 class Video:
     def __init__(self,video_id):
@@ -21,7 +24,8 @@ class Video:
         self.title = video_response['items'][0]['snippet']['title']
         self.viewCount = video_response['items'][0]['statistics']['viewCount']
         self.likeCount = video_response['items'][0]['statistics']['likeCount']
-
+        self.duration = video_response['items'][0]['statistics']['likeCount']
+        printj(video_response)
 
     def __str__(self):
         return f'{self.title}'
